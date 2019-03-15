@@ -20,10 +20,10 @@ get_win_indicator <- function(max_simulation_length=10^4) {
 
 ## Let's approximate p by running lots of simulations and averaging
 n_simulations <- 10^4
-simulated_wins <- replicate(n_simulations, get_win_indicator())
+simulations <- replicate(n_simulations, get_win_indicator())
 
 ## This should be close to the correct p = 6/11
-p_hat <- mean(simulated_wins)
+p_hat <- mean(simulations)
 
 ## We expect a large p-value
-t.test(simulated_wins, mu=6/11)
+t.test(simulations, mu=6/11)
