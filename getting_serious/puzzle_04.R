@@ -1,4 +1,6 @@
 ## When tossing a fair coin, what's the expected number of rolls until HH (two heads in a row)?
+## This can be solved by hand, but let's confirm via simulation
+correct_expected_rolls <- 6
 
 set.seed(555444)
 
@@ -39,7 +41,7 @@ get_time_to_target_recursive <- function(rolls=NULL, time=0, target_sequence=c("
 
 n_simulations <- 10^5
 simulations <- replicate(n_simulations, get_time_to_target())
-t.test(simulations, mu=6)
+t.test(simulations, mu=correct_expected_rolls)
 
 simulations <- replicate(n_simulations, get_time_to_target_recursive())
-t.test(simulations, mu=6)
+t.test(simulations, mu=correct_expected_rolls)

@@ -25,5 +25,5 @@ simulations <- replicate(n_simulations, get_win_indicator())
 ## This should be close to the correct p = 6/11
 p_hat <- mean(simulations)
 
-## We expect a large p-value
+## We expect a large p-value and a confidence interval that includes 6/11
 t.test(simulations, mu=6/11)
