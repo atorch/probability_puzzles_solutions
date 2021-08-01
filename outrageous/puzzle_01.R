@@ -4,6 +4,7 @@
 set.seed(987987)
 
 get_n_followed <- function(population=c(rep("fox", 5), rep("hound", 7))) {
+
     N <- length(population)
 
     # Note: this puts the foxes and hounds in random order
