@@ -30,7 +30,7 @@ P[n_people + 1, n_people] <- 1
 ## Each row of the transition matrix should sum to 1.0
 all(rowSums(P) == 1)
 
-## Initial distribution -- initial, the state is equally likely to be 0 or 1
+## Initial distribution -- initially, the state is equally likely to be 0 or 1
 pi <- c(0.5, 0.5, rep(0, length(states) - 2))
 
 t(pi) %*% P  # Distribution after one period
