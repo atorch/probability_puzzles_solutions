@@ -6,32 +6,36 @@ n_people <- 10
 ## A state of 10 would mean everyone is in room B, for example
 states <- seq(0, n_people)
 
-## Transition matrix P
+## Transition matrix
 ## P[i, j] is the probability of transitioning from state i to j
-P <- matrix(0, length(states), length(states))
-rownames(P) <- states
-colnames(P) <- states
+P_with_cycles <- matrix(0, length(states), length(states))
+rownames(P_with_cycles) <- states
+colnames(P_with_cycles) <- states
 for(state_idx in seq(2, n_people)) {
 
     state <- states[state_idx]
 
     ## Person in room B selected and moves to A, so the state decreases
-    P[state_idx, state_idx - 1] <- state / n_people
+    P_with_cycles[state_idx, state_idx - 1] <- state / n_people
 
     ## Person in room A selected and moves to B, so the state increases
-    P[state_idx, state_idx + 1] <- (n_people - state) / n_people
+    P_with_cycles[state_idx, state_idx + 1] <- (n_people - state) / n_people
 }
 
 ## Edge cases: when one room is full,
 ## one person will move to the empty room (with probability one)
-P[1, 2] <- 1
-P[n_people + 1, n_people] <- 1
+P_with_cycles[1, 2] <- 1
+P_with_cycles[n_people + 1, n_people] <- 1
+
+## Put some probability on the diagonals of the transition matrix
+## Under P_with_cycles, the state would cycle between even and odd numbers
+P <- 0.1 * diag(length(states)) + 0.9 * P_with_cycles
 
 ## Each row of the transition matrix should sum to 1.0
 all(rowSums(P) == 1)
 
-## Initial distribution -- initially, the state is equally likely to be 0 or 1
-pi <- c(0.5, 0.5, rep(0, length(states) - 2))
+## Initial distribution -- initially, everyone is in room A
+pi <- c(1.0, rep(0, length(states) - 1))
 
 t(pi) %*% P  # Distribution after one period
 t(pi) %*% P %*% P  # Distribution after two periods
