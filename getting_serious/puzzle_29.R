@@ -29,10 +29,14 @@ P_with_cycles[n_people + 1, n_people] <- 1
 
 ## Put some probability on the diagonals of the transition matrix
 ## Under P_with_cycles, the state would cycle between even and odd numbers
-P <- 0.1 * diag(length(states)) + 0.9 * P_with_cycles
+## See https://stats.stackexchange.com/questions/143948/aperiodicity-in-markov-chain
+## and https://math.stackexchange.com/questions/112151/what-values-makes-this-markov-chain-aperiodic
+## Putting any positive probability on the diagonals makes this Markov chain aperiodic
+pr_stay_in_current_state <- 0.25
+P <- pr_stay_in_current_state * diag(length(states)) + (1 - pr_stay_in_current_state) * P_with_cycles
 
 ## Each row of the transition matrix should sum to 1.0
-all(rowSums(P) == 1)
+isTRUE(all.equal(as.vector(rowSums(P)), rep(1.0, length(states))))
 
 ## Initial distribution -- initially, everyone is in room A
 pi <- c(1.0, rep(0, length(states) - 1))
