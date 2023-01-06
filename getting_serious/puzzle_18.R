@@ -9,15 +9,19 @@ abline(a=0, b=1, lty=2, col="red")
 abline(v=1/3, lty=3, col="blue")
 
 pop_goes_extinct <- function(current_pop, max_pop=10^6, pr_survive=0.75, n_children_if_survive=2) {
-    survive <- runif(current_pop) < pr_survive
-    if(!any(survive)) return(T)
+    n_survive <- rbinom(1, size=current_pop, prob=pr_survive)
+    if(n_survive == 0) return(T)
+
+    ## Size of the next generation
+    next_pop <- n_survive * n_children_if_survive
 
     ## Shortcut: if the current population ever exceeds max_pop, we assume the population never goes extinct
-    if(sum(survive) * n_children_if_survive > max_pop) return(F)
+    if(next_pop > max_pop) return(F)
 
-    return(pop_goes_extinct(sum(survive) * n_children_if_survive, max_pop))
+    return(pop_goes_extinct(next_pop, max_pop))
 }
 
 ## Simulate probability of extinction when initial population is either 1 or 2
-mean(replicate(1000, pop_goes_extinct(current_pop=1)))  # 1/3
-mean(replicate(1000, pop_goes_extinct(current_pop=2)))  # (1/3)^2 == 1/9, around 0.11
+n_sims <- 10000
+mean(replicate(n_sims, pop_goes_extinct(current_pop=1)))  # 1/3
+mean(replicate(n_sims, pop_goes_extinct(current_pop=2)))  # (1/3)^2 == 1/9, around 0.11
